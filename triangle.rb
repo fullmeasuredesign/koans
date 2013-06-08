@@ -14,6 +14,9 @@
 #   about_triangle_project_2.rb
 #
 def triangle(x, y, z)
+  x,y,z = [x,y,z].sort
+  raise TriangleError, "Not a possible triangle" if ((x+y+z) == 0) || ((x+y) <= z)
+  raise TriangleError, "Cannot have negative sides!" if [x,y,z].min < 0
   case [x,y,z].uniq.size
 	when 1 then :equilateral
 	when 2 then :isosceles
