@@ -1,5 +1,4 @@
 require File.expand_path(File.dirname(__FILE__) + '/neo')
-
 # Project: Create a Proxy Class
 #
 # In this assignment, create a proxy class (one is started for you
@@ -12,13 +11,29 @@ require File.expand_path(File.dirname(__FILE__) + '/neo')
 # missing handler and any other supporting methods.  The specification
 # of the Proxy class is given in the AboutProxyObjectProject koan.
 
-class Proxy
+class Proxy < SimpleDelegator
   def initialize(target_object)
-    @object = target_object
-    # ADD MORE CODE HERE
+    super(target_object)
+    @messages_hash = Hash.new(0)
   end
 
-  # WRITE CODE HERE
+  def method_missing(meth, *args, &block)
+    @messages_hash[meth] += 1 if self.__getobj__.respond_to?(meth)
+    super(meth, *args, &block)
+  end
+
+  def messages
+    @messages_hash.keys
+  end
+
+  def called?(meth)
+    @messages_hash.include?(meth)
+  end
+
+  def number_of_times_called(meth)
+    @messages_hash[meth]
+  end
+
 end
 
 # The proxy object should pass the following Koan:
